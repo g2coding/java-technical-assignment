@@ -19,16 +19,27 @@ public class BuyTwoForOnePoundPromotion extends Promotion {
             .collect(Collectors.partitioningBy(i -> i.getProductCode().equals(getProductCode())));
 
         List<Item> itemsEligibleForDiscount = itemsEligibleAndNonEligibleForDiscount.get(true);
-        int numOfItems = itemsEligibleForDiscount.size();
-        if (numOfItems < 2) {
+        int numOfEligibleItems = itemsEligibleForDiscount.size();
+        if (numOfEligibleItems < 2) {
             return items;
         }
-        BigDecimal discount = (itemsEligibleForDiscount.get(0).price().add(itemsEligibleForDiscount.get(1).price()).subtract(BigDecimal.ONE)).divide(new BigDecimal("2.00"), RoundingMode.HALF_UP);
-        int numOfItemsNotToBeDiscounted = numOfItems % 2;
-        int itemsToBeDiscounted = numOfItems - numOfItemsNotToBeDiscounted;
-        List<Item> itemsWithDiscounts = itemsEligibleForDiscount.stream().limit(itemsToBeDiscounted).map(i -> i.withDiscount(discount)).collect(Collectors.toList());
-        List<Item> itemsWithoutDiscounts = itemsEligibleForDiscount.stream().skip(itemsWithDiscounts.size()).collect(Collectors.toList());
-        List<Item> itemsEligibleForDiscountsAfterDiscounts = Stream.concat(itemsWithDiscounts.stream(), itemsWithoutDiscounts.stream()).collect(Collectors.toList());
+        List<Item> itemsEligibleForDiscountsAfterDiscounts =
+            getItemsEligibleForDiscountsAfterDiscounts(itemsEligibleForDiscount, numOfEligibleItems);
         return Stream.concat(itemsEligibleForDiscountsAfterDiscounts.stream(), itemsEligibleAndNonEligibleForDiscount.get(false).stream()).collect(Collectors.toList());
+    }
+
+    private List<Item> getItemsEligibleForDiscountsAfterDiscounts(
+        List<Item> itemsEligibleForDiscount,
+        int numOfEligibleItems
+    ) {
+        //I assume products with the same product code have the same price.
+        BigDecimal
+            discount = itemsEligibleForDiscount.get(0).price().multiply(new BigDecimal("2")).subtract(BigDecimal.ONE).divide(new BigDecimal("2.00"), RoundingMode.HALF_UP);
+        int numOfItemsNotToBeDiscounted = numOfEligibleItems % 2;
+        int itemsToBeDiscounted = numOfEligibleItems - numOfItemsNotToBeDiscounted;
+        List<Item> itemsWithDiscounts = itemsEligibleForDiscount.stream().limit(itemsToBeDiscounted).map(i -> i.withDiscount(discount)).collect(
+            Collectors.toList());
+        List<Item> itemsWithoutDiscounts = itemsEligibleForDiscount.stream().skip(itemsWithDiscounts.size()).collect(Collectors.toList());
+        return Stream.concat(itemsWithDiscounts.stream(), itemsWithoutDiscounts.stream()).collect(Collectors.toList());
     }
 }
