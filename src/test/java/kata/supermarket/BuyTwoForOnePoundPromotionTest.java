@@ -47,12 +47,21 @@ class BuyTwoForOnePoundPromotionTest {
 
         List<Item> itemsAfterDiscounts = buyTwoForOnePoundPromotion.apply(items);
 
+        long actualItemsWithDiscount = getNumOfFilteredItems(crisps, expectedDiscount, itemsAfterDiscounts);
+        long actualCrispsItemsWithoutDiscount = getNumOfFilteredItems(crisps, BigDecimal.ZERO, itemsAfterDiscounts);
+        long actualYoghurtItemsWithoutDiscount = getNumOfFilteredItems(yoghurt, BigDecimal.ZERO, itemsAfterDiscounts);
+
         assertEquals(5, itemsAfterDiscounts.size());
-        assertEquals(expectedDiscount, itemsAfterDiscounts.get(0).discount());
-        assertEquals(expectedDiscount, itemsAfterDiscounts.get(1).discount());
-        assertEquals(BigDecimal.ZERO, itemsAfterDiscounts.get(2).discount());
-        assertEquals(BigDecimal.ZERO, itemsAfterDiscounts.get(3).discount());
-        assertEquals(BigDecimal.ZERO, itemsAfterDiscounts.get(4).discount());
+        assertEquals(2, actualItemsWithDiscount);
+        assertEquals(1, actualCrispsItemsWithoutDiscount);
+        assertEquals(2, actualYoghurtItemsWithoutDiscount);
     }
 
+    private long getNumOfFilteredItems(Item crisps, BigDecimal expectedDiscount, List<Item> itemsAfterDiscounts) {
+        return itemsAfterDiscounts
+            .stream()
+            .filter(i -> i.discount().equals(expectedDiscount))
+            .filter(i -> i.getProductCode().equals(crisps.getProductCode()))
+            .count();
+    }
 }
