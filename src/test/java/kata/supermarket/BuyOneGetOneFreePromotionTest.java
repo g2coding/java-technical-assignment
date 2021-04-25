@@ -44,4 +44,20 @@ class BuyOneGetOneFreePromotionTest {
         assertEquals(BigDecimal.ZERO, itemsAfterDiscounts.get(0).discount());
         assertEquals(BigDecimal.ZERO, itemsAfterDiscounts.get(1).discount());
     }
+
+    @Test
+    @DisplayName("The promotion should apply only to products with the same product code as the one included in the promotion also when other products with other codes are present")
+    void buyOneGetOneFreeShouldApplyOnlyToProductsWithTheGivenProductCodeWhenMoreProductsWithDifferentCodesIncluded() {
+        BuyOneGetOneFreePromotion buyOneGetOneFreePromotion = new BuyOneGetOneFreePromotion("P1");
+        Item yoghurt = new Product(new BigDecimal("0.50"), "A").oneOf();
+        Item milk = new Product(new BigDecimal("1.00"), "P1").oneOf();
+        List<Item> items = List.of(milk, milk, yoghurt, yoghurt);
+
+        List<Item> itemsAfterDiscounts = buyOneGetOneFreePromotion.apply(items);
+
+        assertEquals(new BigDecimal("1.00"), itemsAfterDiscounts.get(0).discount());
+        assertEquals(BigDecimal.ZERO, itemsAfterDiscounts.get(1).discount());
+        assertEquals(BigDecimal.ZERO, itemsAfterDiscounts.get(2).discount());
+        assertEquals(BigDecimal.ZERO, itemsAfterDiscounts.get(3).discount());
+    }
 }
