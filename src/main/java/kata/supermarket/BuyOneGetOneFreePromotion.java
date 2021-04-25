@@ -13,9 +13,14 @@ public class BuyOneGetOneFreePromotion extends Promotion{
 
     @Override
     public List<Item> apply(List<Item> items) {
-        int freeItems = items.size() / 2;
-        Stream<Item> freeProducts = items.stream().limit(freeItems).map(i -> i.withDiscount(i.price()));
-        Stream<Item> productsToPay = items.stream().skip(freeItems);
+        List<Item> itemsWithApplicableProductCode =
+            items.stream().filter(i -> i.getProductCode().equals(getProductCode())).collect(Collectors.toList());
+        if (itemsWithApplicableProductCode.isEmpty()) {
+            return items;
+        }
+        int freeItems = itemsWithApplicableProductCode.size() / 2;
+        Stream<Item> freeProducts = itemsWithApplicableProductCode.stream().limit(freeItems).map(i -> i.withDiscount(i.price()));
+        Stream<Item> productsToPay = itemsWithApplicableProductCode.stream().skip(freeItems);
         return Stream.concat(freeProducts, productsToPay).collect(Collectors.toList());
     }
 }
