@@ -18,6 +18,11 @@ public class Checkout {
     }
 
     public BigDecimal total() {
-        return null;
+        List<Item> itemsAfterDiscounts = basket.items();
+        for (Promotion promotion : promotions) {
+            itemsAfterDiscounts = promotion.apply(itemsAfterDiscounts);
+        }
+        Basket basketAfterDiscounts = basket.withItems(itemsAfterDiscounts);
+        return basketAfterDiscounts.total();
     }
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.*;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,6 +23,18 @@ class BasketTest {
         final Basket basket = new Basket();
         items.forEach(basket::add);
         assertEquals(new BigDecimal(expectedTotal), basket.total());
+    }
+
+    @Test
+    @DisplayName("Total subtracts the discounts of the items")
+    void totalSubtractsTheDiscountsOfTheItems() {
+        List<Item> itemsWithDiscounts = List.of(
+            aPintOfMilk().withDiscount(new BigDecimal("0.10")),
+            aPackOfDigestives().withDiscount(new BigDecimal("0.55"))
+        );
+        final Basket basket = new Basket().withItems(itemsWithDiscounts);
+
+        assertEquals(new BigDecimal("1.39"), basket.total());
     }
 
     static Stream<Arguments> basketProvidesTotalValue() {
