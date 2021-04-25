@@ -6,8 +6,11 @@ public class Product {
 
     private final BigDecimal pricePerUnit;
 
-    public Product(final BigDecimal pricePerUnit) {
+    private final String productCode;
+
+    public Product(final BigDecimal pricePerUnit, String productCode) {
         this.pricePerUnit = pricePerUnit;
+        this.productCode = productCode;
     }
 
     BigDecimal pricePerUnit() {
@@ -16,5 +19,9 @@ public class Product {
 
     public Item oneOf() {
         return new ItemByUnit(this);
+    }
+
+    public String getProductCode() {
+        return productCode;
     }
 }

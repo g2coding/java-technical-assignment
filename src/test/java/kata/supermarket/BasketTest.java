@@ -1,6 +1,7 @@
 package kata.supermarket;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -33,6 +34,13 @@ class BasketTest {
         );
     }
 
+    @Test
+    void withItemsShouldCreateANewBasketWithGivenItems() {
+        Basket basket = new Basket();
+        assert basket.items().isEmpty();
+        assertEquals(1, basket.withItems(Collections.singletonList(aPintOfMilk())).items().size());
+    }
+
     private static Arguments aSingleItemPricedByWeight() {
         return Arguments.of("a single weighed item", "1.25", Collections.singleton(twoFiftyGramsOfAmericanSweets()));
     }
@@ -57,15 +65,15 @@ class BasketTest {
     }
 
     private static Item aPintOfMilk() {
-        return new Product(new BigDecimal("0.49")).oneOf();
+        return new Product(new BigDecimal("0.49"), "M1").oneOf();
     }
 
     private static Item aPackOfDigestives() {
-        return new Product(new BigDecimal("1.55")).oneOf();
+        return new Product(new BigDecimal("1.55"), "D1").oneOf();
     }
 
     private static WeighedProduct aKiloOfAmericanSweets() {
-        return new WeighedProduct(new BigDecimal("4.99"));
+        return new WeighedProduct(new BigDecimal("4.99"), "AS1");
     }
 
     private static Item twoFiftyGramsOfAmericanSweets() {
@@ -73,7 +81,7 @@ class BasketTest {
     }
 
     private static WeighedProduct aKiloOfPickAndMix() {
-        return new WeighedProduct(new BigDecimal("2.99"));
+        return new WeighedProduct(new BigDecimal("2.99"), "PM1");
     }
 
     private static Item twoHundredGramsOfPickAndMix() {

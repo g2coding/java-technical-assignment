@@ -13,6 +13,10 @@ public class Basket {
         this.items = new ArrayList<>();
     }
 
+    public Basket(List<Item> items) {
+        this.items = items;
+    }
+
     public void add(final Item item) {
         this.items.add(item);
     }
@@ -23,6 +27,10 @@ public class Basket {
 
     public BigDecimal total() {
         return new TotalCalculator().calculate();
+    }
+
+    public Basket withItems(List<Item> items) {
+        return new Basket(items);
     }
 
     private class TotalCalculator {
