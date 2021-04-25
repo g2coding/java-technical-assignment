@@ -3,6 +3,10 @@ package kata.supermarket;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Notes: The functionality for the BuyOneGetOneFreePromotion was completed in the time suggested.
+ * The functionality for the BuyTwoForOnePoundPromotion promotion was added in time beyond that time frame.
+ */
 public class Checkout {
 
     private final List<Promotion> promotions;
