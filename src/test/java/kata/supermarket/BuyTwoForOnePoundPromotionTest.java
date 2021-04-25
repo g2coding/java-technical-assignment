@@ -17,6 +17,7 @@ class BuyTwoForOnePoundPromotionTest {
 
         List<Item> itemsAfterDiscounts = buyTwoForOnePoundPromotion.apply(items);
 
+        assertEquals(1, itemsAfterDiscounts.size());
         assertEquals(BigDecimal.ZERO, itemsAfterDiscounts.get(0).discount());
     }
 
@@ -29,6 +30,7 @@ class BuyTwoForOnePoundPromotionTest {
 
         List<Item> itemsAfterDiscounts = buyTwoForOnePoundPromotion.apply(items);
 
+        assertEquals(2, itemsAfterDiscounts.size());
         assertEquals(expectedDiscount, itemsAfterDiscounts.get(0).discount());
         assertEquals(expectedDiscount, itemsAfterDiscounts.get(1).discount());
     }
@@ -45,10 +47,12 @@ class BuyTwoForOnePoundPromotionTest {
 
         List<Item> itemsAfterDiscounts = buyTwoForOnePoundPromotion.apply(items);
 
+        assertEquals(5, itemsAfterDiscounts.size());
         assertEquals(expectedDiscount, itemsAfterDiscounts.get(0).discount());
         assertEquals(expectedDiscount, itemsAfterDiscounts.get(1).discount());
         assertEquals(BigDecimal.ZERO, itemsAfterDiscounts.get(2).discount());
         assertEquals(BigDecimal.ZERO, itemsAfterDiscounts.get(3).discount());
+        assertEquals(BigDecimal.ZERO, itemsAfterDiscounts.get(4).discount());
     }
 
 }
