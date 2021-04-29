@@ -24,7 +24,9 @@ public class BuyOneGetOneFreePromotion extends Promotion{
         int freeItems = itemsWithApplicableProductCode.size() / 2;
         Stream<Item> freeProducts = itemsWithApplicableProductCode.stream().limit(freeItems).map(i -> i.withDiscount(i.price()));
         Stream<Item> productsToPay = itemsWithApplicableProductCode.stream().skip(freeItems);
-        List<Item> itemsWithApplicableProductCodeAfterPromotions = Stream.concat(freeProducts, productsToPay).collect(Collectors.toList());
-        return Stream.concat(itemsWithApplicableProductCodeAfterPromotions.stream(), itemsEligibleAndNonEligibleForDiscount.get(false).stream()).collect(Collectors.toList());
+        return Stream.of(freeProducts, productsToPay, itemsEligibleAndNonEligibleForDiscount.get(false).stream())
+            .reduce(Stream::concat)
+            .orElseGet(Stream::empty)
+            .collect(Collectors.toList());
     }
 }
