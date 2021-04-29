@@ -9,9 +9,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class ItemByUnitTest {
 
     @Test
-    void priceAfterDiscountsShouldBeSameAsPriceBeforeDiscountsWhenItemFirstCreated() {
+    void discountsShouldBeZeroWhenItemFirstCreated() {
         Item itemByUnit = new Product(new BigDecimal("10.00"), "P1").oneOf();
-        assertEquals(new BigDecimal("10.00"), itemByUnit.discount());
+        assertEquals(BigDecimal.ZERO, itemByUnit.discount());
     }
 
     @Test
